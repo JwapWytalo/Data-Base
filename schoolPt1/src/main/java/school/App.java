@@ -17,66 +17,82 @@ public class App {
 		String email;
 
 		do {
-		System.out.println();
-		System.out.println("-------------------MENU--------------------");
-		System.out.println("---------------1-ADICIONAR-----------------");
-		System.out.println("------------2-EXIBIR ESTUDANTES------------");
-		System.out.println("----------------3-EDITAR-------------------");
-		System.out.println("----------------4-DELETAR-------------------");
-		System.out.println("-----------------5-SAIR--------------------");
+			System.out.println();
+			System.out.println("-------------------MENU--------------------");
+			System.out.println("---------------1-ADICIONAR-----------------");
+			System.out.println("------------2-EXIBIR ESTUDANTES------------");
+			System.out.println("----------------3-EDITAR-------------------");
+			System.out.println("----------------4-DELETAR-------------------");
+			System.out.println("-----------------5-SAIR--------------------");
 
-		choice = scan.nextInt();
+			choice = scan.nextInt();
+			scan.nextLine();
 
-		switch (choice) {
+			switch (choice) {
 
-		case 1:
+			case 1:
 
-			System.out.println("Digite o nome do estudante: ");
-			name = scan.next();
-			student.setName(name);
-			System.out.println("Digite o email do estudante: ");
-			email = scan.next();
-			student.setEmail(email);
-			studentManager.addStudent(student);
+				System.out.println("Digite o nome do estudante: ");
+				name = scan.nextLine();
+				student.setName(name);
+				System.out.println("Digite o email do estudante: ");
+				email = scan.nextLine();
+				student.setEmail(email);
 
-			break;
+				if (studentManager.addStudent(student)) {
+					System.out.println("Inserção bem sucedida!");
+				} else {
+					System.out.println("Falha na inserção!");
+				}
 
-		case 2:
-			studentManager.getStudents();
-			break;
+				break;
 
-		case 3:
+			case 2:
+				studentManager.getStudents();
+				break;
 
-			System.out.println("Digite o id do estudante: ");
-			id = scan.nextInt();
-			student.setId(id);
-			System.out.println("Digite o novo nome do estudante: ");
-			name = scan.next();
-			student.setName(name);
-			System.out.println("Digite o novo email do estudante: ");
-			email = scan.next();
-			student.setEmail(email);
+			case 3:
 
-			studentManager.updateStudent(student);
+				System.out.println("Digite o id do estudante: ");
+				id = scan.nextInt();
+				student.setId(id);
+				scan.nextLine();
+				System.out.println("Digite o novo nome do estudante: ");
+				name = scan.nextLine();
+				student.setName(name);
+				System.out.println("Digite o novo email do estudante: ");
+				email = scan.nextLine();
+				student.setEmail(email);
 
-			break;
+				if (studentManager.updateStudent(student)) {
+					System.out.println("Atualização bem sucedida!");
+				} else {
+					System.out.println("Falha na atualização!");
+				}
 
-		case 4:
-			System.out.println("Digite o id do estudante que voce deseja remover: ");
-			id = scan.nextInt();
-			student.setId(id);
-			studentManager.deleteStudent(student);
-			
-			break;
+				break;
 
-		case 5:
-			System.out.println("bye");
-			break;
+			case 4:
+				System.out.println("Digite o id do estudante que voce deseja remover: ");
+				id = scan.nextInt();
+				student.setId(id);
+				scan.nextLine();
+				if (studentManager.deleteStudent(student)) {
+					System.out.println("Remoção bem sucedida!");
+				} else {
+					System.out.println("Falha na remoção!");
+				}
 
-		}
-		
-		}while(choice != 0);
+				break;
 
+			case 5:
+				System.out.println("bye");
+				break;
+
+			}
+
+		} while (choice != 5);
+		scan.close();
 	}
 
 }

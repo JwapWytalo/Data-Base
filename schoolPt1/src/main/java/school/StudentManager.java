@@ -8,30 +8,34 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.ArrayList;
 
-
 public class StudentManager {
 
 	private static String DB_URL = "jdbc:mysql://localhost/school";
 	private static String DB_USER = "admin";
 	private static String DB_PASSWORD = "1234";
 
-	void addStudent(Student student) throws SQLException {
-
+	public boolean addStudent(Student student) {
 		Connection conn = null;
 		Statement stmt = null;
-		conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 
-		stmt = conn.createStatement();
-		String sqlCommand = "INSERT INTO student (name, email) VALUES ('" + student.getName() + "',  '"
-				+ student.getEmail() + "')";
-		stmt.executeUpdate(sqlCommand, Statement.RETURN_GENERATED_KEYS);
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			stmt = conn.createStatement();
+			String sqlCommand = "INSERT INTO student (name, email) VALUES ('" + student.getName() + "',  '"
+					+ student.getEmail() + "')";
 
-		conn.close();
+			int rowsUpdated = stmt.executeUpdate(sqlCommand, Statement.RETURN_GENERATED_KEYS);
 
+	        conn.close();
+	        return rowsUpdated > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	List<Student> getStudents() throws SQLException {
-		
+
 		List<Student> studentList = new ArrayList<Student>();
 		Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 		Statement stmt = conn.createStatement();
@@ -49,42 +53,54 @@ public class StudentManager {
 			student.setName(name);
 			String email = rs.getString("email");
 			student.setEmail(email);
-			
+
 			System.out.println("Id: " + id + " - Name: " + name + " - Email: " + email);
 		}
 		conn.close();
-	    return studentList;
+		return studentList;
 	}
 
-	void updateStudent(Student student) throws SQLException {
+	public boolean updateStudent(Student student) throws SQLException {
+		Connection conn = null;
+		Statement stmt = null;
 
-		Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-		Statement stmt = conn.createStatement();
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			stmt = conn.createStatement();
 
-		String sqlCommand = "UPDATE student SET name = '" + student.getName() + "', email = '" + student.getEmail()
-				+ "' WHERE id = " + student.getId();
-		stmt.execute(sqlCommand);
+			String sqlCommand = "UPDATE student SET name = '" + student.getName() + "', email = '" + student.getEmail()
+					+ "' WHERE id = " + student.getId();
+			 int rowsUpdated = stmt.executeUpdate(sqlCommand);
 
-		int rowsUpdated = stmt.getUpdateCount();
+		        conn.close();
+		        return rowsUpdated > 0;
+		} catch (SQLException e) {
+			throw e;
 
-		System.out.println("Rows updated: " + rowsUpdated);
-
-		conn.close();
-
+		}
 	}
 
-	void deleteStudent(Student student) throws SQLException {
+	public boolean deleteStudent(Student student) throws SQLException {
+		Connection conn = null;
+		Statement stmt = null;
 
-		Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-		Statement stmt = conn.createStatement();
+		try {
+			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+			stmt = conn.createStatement();
 
-		String sqlCommand = "DELETE FROM student WHERE id = " + student.getId();
+			String sqlCommand = "DELETE FROM student WHERE id = " + student.getId();
+		
+			int rowsDeleted = stmt.executeUpdate(sqlCommand);
 
-		stmt.execute(sqlCommand);
-
+	        conn.close();
+	        return rowsDeleted > 0;
+		} catch (SQLException e) {
+			throw e;
+		}
 	}
+
 }
 
 /*
- * GRANT ALL ON school.* TO admin@”%” identified by ”1234”; FLUSH PRIVILEGES;
+ * GRANT ALL ON school.* TO admin@"%" identified by "1234"; FLUSH PRIVILEGES;
  */
